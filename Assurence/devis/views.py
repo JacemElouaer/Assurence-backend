@@ -4,6 +4,7 @@ from .serialisers import *
 from .models import *
 from prospect.models import Prospect
 from prospect.serialisers import *
+import time
 
 
 # Create your views here.
@@ -23,6 +24,7 @@ def get_devis_maison(request):
 def save_devis_maison(request):
     data = request.data
     id = data['id']
+    time.sleep(1)
     print("this is id :  ", id)
     try:
         prospect = Prospect.objects.get(id=id)
@@ -33,6 +35,8 @@ def save_devis_maison(request):
 
     devis_maison = Devis_Maison.objects.create(
         prospect=prospect,
+        adresse=data['adresse'],
+        complement=data['complement'],
         email_prospect=data['email_prospect'],
         besoin_resiliation=data['besoin_resiliation'],
         type_residence=data['type_residence'],
@@ -71,16 +75,16 @@ def get_devis_apartement(request):
 @api_view(["POST"])
 def save_devis_apartment(request):
     data = request.data
-    id = data['id']
-    print("this is id :  ", id)
     try:
-        prospect = Prospect.objects.get(id=id)
+        prospect = Prospect.objects.get(id=data['id'])
     except Prospect.DoesNotExist:
         prospect = "i can't find it"
 
     print(prospect)
     devis_apartment = Devis_Maison.objects.create(
         prospect=prospect,
+        adresse=data['adresse'],
+        complement=data['complement'],
         email_prospect=data['email_prospect'],
         besoin_resiliation=data['besoin_resiliation'],
         type_residence=data['type_residence'],
@@ -114,16 +118,17 @@ def get_devis_immeuble(request):
 @api_view(["POST"])
 def save_devis_immeuble(request):
     data = request.data
-    id = data['id']
-    print("this is id :  ", id)
     try:
-        prospect = Prospect.objects.get(id=id)
+        prospect = Prospect.objects.get(id=data['id'])
     except Prospect.DoesNotExist:
         prospect = "i can't find it"
 
-    print(prospect)
-    devis_apartment = Devis_Maison.objects.create(
-        Surface=data['Surface'],
+    print("this is " , prospect)
+    devis_immeuble = Devis_Immeuble.objects.create(
+        prospect=prospect,
+        adresse=data['adresse'],
+        complement=data['complement'],
+        surface_immeuble=data['surface_immeuble'],
         nombre_lots=data['nombre_lots'],
         Niveau_immeuble=data['Niveau_immeuble'],
         Niveau_sous_sol=data['Niveau_sous_sol'],
@@ -140,16 +145,11 @@ def save_devis_immeuble(request):
         taux_proprietaire=data['taux_proprietaire'],
         nbr_sinistre=data['nbr_sinistre'],
         type_entreprise=data['type_entreprise'],
-        prospect=data['prospect'],
         date_assemblee=data['date_assemblee'],
         ancien_assurence=data['ancien_assurence'],
         resiliation=data['resiliation'],
-        type_residence=data['type_residence'],
-        surface_immeuble=data['surface_immeuble'],
-        periode_prochaine_resiliation=data['periode_prochaine_resiliation'],
-        garanties=data['garanties'],
         Tarification=data['Tarification'],
-        franchise=data[''],
+        franchise=data['franchise'],
         email_prospect=data['email_prospect'])
-    serializer = DevisAppartmentSerializers(devis_apartment, many=False)
+    serializer = DevisAppartmentSerializers(devis_immeuble, many=False)
     return Response(serializer.data)

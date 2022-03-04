@@ -28,6 +28,8 @@ class Devis_Maison(models.Model):
                             ("Entre 1981 et 2000 ", "Entre 1981 et 2000"), ("Après 2001", "Après 2001"))
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, blank=True, editable=False, max_length=20)
+    adresse = models.CharField(max_length=250, verbose_name="adresse de l'immeuble", blank=True, null=True)
+    complement = models.CharField(max_length=250, verbose_name="complement d'adresse ", blank=True, null=True)
     prospect = models.OneToOneField(Prospect, verbose_name="le proprietary de devis", blank=True, null=True,
                                     on_delete=models.CASCADE)
     email_prospect = models.EmailField(verbose_name="email de prospect", blank=True, null=True)
@@ -83,7 +85,8 @@ class Devis_Appartement(models.Model):
                                 ("entre 21 m et 100 m ", "entre 21 m et 100 m"))
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, blank=True, editable=False, max_length=20)
-
+    adresse = models.CharField(max_length=250, verbose_name="adresse de l'immeuble", blank=True, null=True)
+    complement = models.CharField(max_length=250, verbose_name="complement d'adresse ", blank=True, null=True)
     prospect = models.OneToOneField(Prospect, verbose_name="le proprietary de devis", blank=True, null=True,
                                     on_delete=models.CASCADE)
     email_prospect = models.EmailField(verbose_name="email de prospect", blank=True, null=True)
@@ -156,6 +159,7 @@ class Devis_Immeuble(models.Model):
                         ("Occupé pour moins de 50% de sa surface", "Occupé pour moins de 50% de sa surface"),
                         ("Non, inoccupé et/ou arreté de péril ", "Non, inoccupé et/ou arreté de péril "))
     nombre_sinistre = (("Aucun", "Aucun"), ("un", "un"), ("deux", "deux"), ("Trois ou plus", "Trois ou plus"))
+    Activite_commerciale = (("Aucun", "Aucun"), ("un", "un"), ("deux", "deux"), ("Trois ou plus", "Trois ou plus"))
     Type_entreprise = (
         ("Un particulier ", "Un particulier "), ("Une SCI", "Une SCI"), ("Une ASL / une AFULL", "Une ASL / une AFULL"),
         ("Un syndic bénévole", "Un syndic bénévole"),
@@ -166,9 +170,10 @@ class Devis_Immeuble(models.Model):
                       ("secondaire", "secondaire"))
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, blank=True, editable=False, max_length=20)
-    Surface = models.IntegerField(verbose_name="surface habitat", blank=True, null=True,
-                                  validators=[MinValueValidator(25), MaxValueValidator(1000)], default=25)
-
+    adresse = models.CharField(max_length=250, verbose_name="adresse de l'immeuble", blank=True, null=True)
+    complement = models.CharField(max_length=250, verbose_name="complement d'adresse ", blank=True, null=True)
+    surface_immeuble = models.IntegerField(verbose_name="Surface Immeuble", blank=True,
+                                      validators=[MinValueValidator(0), MaxValueValidator(25)], default=0, null=True)
     nombre_lots = models.IntegerField(verbose_name="Nombre de lots", blank=True,
                                       validators=[MinValueValidator(0), MaxValueValidator(25)], default=0, null=True)
     Niveau_immeuble = models.CharField(verbose_name="niveau d'etage de l immeuble ", max_length=255, blank=True,
@@ -184,7 +189,7 @@ class Devis_Immeuble(models.Model):
                                       choices=Type_propriete)
     type_copropriete = models.CharField(verbose_name="Type_copropriete", max_length=255, blank=True, null=True,
                                         choices=Type_copropriete)
-    type_batiment = models.CharField(verbose_name="Type_copropriete", max_length=255, blank=True, null=True,
+    type_batiment = models.CharField(verbose_name="Type_batiment", max_length=255, blank=True, null=True,
                                      choices=Type_batiment)
     periode_construction = models.CharField(verbose_name="annee de contruction de l'immeuble", max_length=80,
                                             blank=True,
@@ -194,7 +199,7 @@ class Devis_Immeuble(models.Model):
     usage_immeuble = MultiSelectField(choices=Usage, blank=True, null=True,
                                       )
 
-    activite_commerciale = models.CharField(max_length=355, blank=True, null=True)
+    activite_commerciale = MultiSelectField(choices=Activite_commerciale, max_length=355, blank=True, null=True)
 
     occupation = models.CharField(verbose_name="Taux d'ccupation", max_length=255, blank=True,
                                   null=True,
@@ -218,8 +223,6 @@ class Devis_Immeuble(models.Model):
 
     type_residence = models.CharField(verbose_name="Type_residence", max_length=255, blank=True, null=True,
                                       choices=Type_residence)
-    surface_immeuble = models.BooleanField(max_length=255, verbose_name="Entre 1 et 25% de la surface de l'immeuble",
-                                           default=True)
 
     periode_prochaine_resiliation = models.DateField(verbose_name="date de prochaine resiliation", null=True,
                                                      blank=True)
