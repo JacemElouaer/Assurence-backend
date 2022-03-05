@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , permission_classes
+from  rest_framework.permissions import AllowAny
 from .models import *
 from .serialisers import *
 
@@ -8,6 +9,7 @@ from .serialisers import *
 # Create your views here.
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def getRoutes(request):
     routes = [
         {
@@ -27,6 +29,7 @@ def getRoutes(request):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def save_prospect(request):
     data = request.data
     prospect = Prospect.objects.create(
@@ -41,7 +44,11 @@ def save_prospect(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def get_all_prospect(request):
-    prospects = Prospect.objects.all()
+    try :
+        prospects = Prospect.objects.all()
+    except Prospect.DoesNotExist :
+        prospects = None
     serializer = ProspectSerializers(prospects, many=True)
     return Response(serializer.data)

@@ -1,5 +1,6 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from .serialisers import *
 from .models import *
 from prospect.models import Prospect
@@ -11,6 +12,7 @@ import time
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def get_devis_maison(request):
     try:
         Devis_Maisons = Devis_Maison.objects.all()
@@ -21,7 +23,9 @@ def get_devis_maison(request):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def save_devis_maison(request):
+
     data = request.data
     id = data['id']
     time.sleep(1)
@@ -63,6 +67,7 @@ def save_devis_maison(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def get_devis_apartement(request):
     try:
         Devis_Maisons = Devis_Maison.objects.all()
@@ -73,6 +78,7 @@ def get_devis_apartement(request):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def save_devis_apartment(request):
     data = request.data
     try:
@@ -106,6 +112,7 @@ def save_devis_apartment(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_devis_immeuble(request):
     try:
         devis_Immeuble = Devis_Immeuble.objects.all()
@@ -116,6 +123,7 @@ def get_devis_immeuble(request):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def save_devis_immeuble(request):
     data = request.data
     try:

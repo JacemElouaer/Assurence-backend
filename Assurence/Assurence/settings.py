@@ -42,9 +42,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'prospect',
     'plaintes',
+    'client',
     'devis',
+    'user',
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -124,8 +127,21 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+FILE_UPLOAD_PERMISSIONS = 0o640
 
+
+AUTH_USER_MODEL = 'user.UserAccount'
 
